@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body {
+    background-color: #232939;
+    color: #f1f5f9;
+    font-size: 8.5pt;
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+  }
+  .page {
+    position: relative;
+    width: 210mm;
+    padding: 12mm 15mm;
+    background: #232939;
+    margin: 30px auto;
+    
+    /* Perbesaran Tampilan +50% (Zoom 150%) */
+    zoom: 1.50;
+    transform-origin: top center;
+  }
+  
+  /* Language Switcher Bar Top Right */
+  .lang-switcher-container {
+    position: absolute;
+    top: 15px;
+    right: 18px;
+    z-index: 100;
+    display: flex;
+    gap: 4px;
+    background: #0f172a;
+    padding: 4px 8px;
+    border-radius: 20px;
+    border: 1px solid #334155;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  body[dir="rtl"] .lang-switcher-container {
+    right: auto;
+    left: 18px;
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 7.5pt;
+    font-weight: 700;
+    padding: 3px 8px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover {
+    color: #ffffff;
+  }
+  .lang-btn.active {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  /* Geometric Glow Elements */
+  .bg-glow-1 {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Header & Profile Frame */
+  .header-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-left: 6px solid #0284c7;
+    border-radius: 8px;
+    padding: 15px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+  body[dir="rtl"] .header-card {
+    border-left: 1px solid #334155;
+    border-right: 6px solid #0284c7;
+  }
+  .profile-frame {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid #0284c7;
+    padding: 3px;
+    background: #0f172a;
+    box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+    flex-shrink: 0;
+  }
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .header-title h1 {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+  }
+  .header-title h1 span {
+    color: #38bdf8;
+  }
+  .header-title .subtitle {
+    font-size: 12pt;
+    color: #38bdf8;
+    font-weight: 600;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Section Styling */
+  .section-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-left: 4px solid #0284c7;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  body[dir="rtl"] .section-card {
+    border-left: 1px solid #334155;
+    border-right: 4px solid #0284c7;
+  }
+  .section-title {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #0284c7, transparent);
+  }
+  body[dir="rtl"] .section-title::after {
+    background: linear-gradient(270deg, #0284c7, transparent);
+  }
+
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+    font-size: 8pt;
+  }
+  th {
+    background: #0f172a;
+    color: #38bdf8;
+    font-weight: 700;
+    text-align: left;
+    padding: 6px 8px;
+    border: 1px solid #334155;
+  }
+  body[dir="rtl"] th {
+    text-align: right;
+  }
+  td {
+    padding: 6px 8px;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: rgba(15, 23, 42, 0.4);
+  }
+
+  /* Personal Data Grid */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 15px;
+    font-size: 8pt;
+  }
+  .grid-item {
+    display: flex;
+  }
+  .grid-label {
+    width: 130px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .grid-value {
+    color: #f8fafc;
+    flex: 1;
+  }
+  .grid-value a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* Job & Item Details */
+  .job-block {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #475569;
+  }
+  .job-block:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .job-header-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 15px;
+    background: #0f172a;
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    border: 1px solid #334155;
+  }
+  .job-description {
+    color: #cbd5e1;
+    font-size: 8pt;
+    line-height: 1.4;
+    text-align: justify;
+    padding: 2px 4px;
+  }
+
+  ul.achievement-list {
+    list-style: none;
+    margin-top: 4px;
+  }
+  ul.achievement-list li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 3px;
+    color: #cbd5e1;
+  }
+  body[dir="rtl"] ul.achievement-list li {
+    padding-left: 0;
+    padding-right: 12px;
+  }
+  ul.achievement-list li::before {
+    content: '►';
+    position: absolute;
+    left: 0;
+    color: #38bdf8;
+    font-size: 6pt;
+    top: 2px;
+  }
+  body[dir="rtl"] ul.achievement-list li::before {
+    left: auto;
+    right: 0;
+    content: '◄';
+  }
+  
+  @media print {
+    .page {
+      zoom: 1;
+      transform: none;
+      margin: 0;
+    }
+    .lang-switcher-container {
+      display: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="bg-glow-1"></div>
+
+  <!-- Language Switcher -->
+  <div class="lang-switcher-container">
+    <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+    <button class="lang-btn" onclick="setLanguage('id')">ID</button>
+    <button class="lang-btn" onclick="setLanguage('ar')">AR</button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header-card">
+    <div class="profile-frame">
+      <img class="profile-img" src="https://lh3.googleusercontent.com/d/1zNRJVA7V5rZRpStQ_xnQgaYwQje6pkUJ" alt="Abdurrahman Hafidz">
+    </div>
+    <div class="header-title">
+      <h1>ABDURRAHMAN <span>HAFIDZ</span></h1>
+      <div class="subtitle" data-i18n="subtitle">Curriculum Vitae</div>
+    </div>
+  </div>
+
+  <!-- A. PERSONAL DATA -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secA_title">A. Personal Data</div>
+    <div class="grid-container">
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_name">Full Name</span><span class="grid-value">: ABDURRAHMAN HAFIDZ</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_pob">Place, Date of Birth</span><span class="grid-value">: Palembang, 09/09/1989</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_gender">Gender</span><span class="grid-value" data-i18n="val_gender">: Male</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_nationality">Nationality</span><span class="grid-value" data-i18n="val_nationality">: Indonesian</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_email">Email</span><span class="grid-value">: ahafidz09@gmail.com</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_religion">Religion</span><span class="grid-value" data-i18n="val_religion">: Islam</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_phone">Phone / Whatsapp</span><span class="grid-value">: <a href="https://wa.me/6281274126064"><span data-i18n="val_phone">Click Here (081274126064)</span></a></span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_marital">Marital Status</span><span class="grid-value" data-i18n="val_marital">: Married</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_nik">National ID (NIK)</span><span class="grid-value">: 1671060909890029</span></div>
+      <div class="grid-item"><span class="grid-label" data-i18n="lbl_hw">Height / Weight</span><span class="grid-value">: 165 cm / 70 kg</span></div>
+      <div class="grid-item"><span class="grid-label">LinkedIn</span><span class="grid-value">: <a href="https://www.linkedin.com/in/abdurrahman-hafidz-a9906368/">LinkedIn Profile</a></span></div>
+      <div class="grid-item"><span class="grid-label">Facebook / Instagram</span><span class="grid-value">: Abdurrahman Hafidz/@hafidz_syahab</span></div>
+    </div>
+
+    <div style="margin-top: 8px; border-top: 1px solid #334155; padding-top: 6px;">
+      <span style="color: #38bdf8; font-weight: 700;" data-i18n="honors_title">Honors & Achievements:</span>
+      <ul class="achievement-list">
+        <li><span data-i18n="ach_1">Outstanding Student Award</span> <a href="https://drive.google.com/file/d/1gklKElz-3LqeF1tctKGbYHdAXisN5JrO/view?usp=sharing">🖨️</a><span data-i18n="ach_1_sub">, Sriwijaya State Polytechnic, Palembang, Indonesia (2009)</span></li>
+        <li><span data-i18n="ach_2">Best Graduate (Associate Degree / D3)</span> <a href="https://drive.google.com/file/d/1bT3iRpsVrH23H252epoFIdvvIZA2IVAe/view?usp=sharing">🖨️</a><span data-i18n="ach_2_sub">, Sriwijaya State Polytechnic, Palembang, Indonesia (2010)</span></li>
+        <li><span data-i18n="ach_3">Top of the Class, Schlumberger Technical School, Oklahoma, USA (2013) 👇 Cert is linked on Section H</span></li>
+        <li><span data-i18n="ach_4">Participant, Halliburton StimChem Custom Chemistry Workshop, Pune, India (2024) 👇 Cert is linked on Section H</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- B. FAMILY STRUCTURE -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secB_title">B. Family Structure</div>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_rel">Relationship</th>
+          <th data-i18n="th_name">Name</th>
+          <th data-i18n="th_occ">Occupation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-i18n="fam_f">Father</td>
+          <td>M. Helmi Shahab</td>
+          <td data-i18n="fam_f_occ">Entrepreneur / Private Employee</td>
+        </tr>
+        <tr>
+          <td data-i18n="fam_m">Mother</td>
+          <td>Nadirah</td>
+          <td data-i18n="fam_hw">Housewife</td>
+        </tr>
+        <tr>
+          <td data-i18n="fam_w">Wife</td>
+          <td>Fatmah</td>
+          <td data-i18n="fam_hw">Housewife</td>
+        </tr>
+        <tr>
+          <td data-i18n="fam_d">Daughter</td>
+          <td>Nusaibah Nuhaa</td>
+          <td data-i18n="fam_d1_occ">Student - Elementary school</td>
+        </tr>
+        <tr>
+          <td data-i18n="fam_d">Daughter</td>
+          <td>Shofiya Sirien</td>
+          <td data-i18n="fam_d2_occ">Student - kindergarten</td>
+        </tr>
+        <tr>
+          <td data-i18n="fam_d">Daughter</td>
+          <td>Maryam Maahirah</td>
+          <td data-i18n="fam_d2_occ">Student - kindergarten</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- C. EDUCATION -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secC_title">C. Education</div>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_deg">Degree Level</th>
+          <th data-i18n="th_sch">School / University</th>
+          <th data-i18n="th_maj">Major / Field of Study</th>
+          <th data-i18n="th_yr">Year</th>
+          <th>GPA</th>
+          <th data-i18n="th_loc">Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span data-i18n="edu_s2">Master's Degree (S2)</span> <a href="https://drive.google.com/file/d/1oRlKYZFJJb6XJpp2rFgGOVs5cZYfdTko/view?usp=sharing">🖨️</a></td>
+          <td>Universitas Muhammadiyah Palembang</td>
+          <td data-i18n="edu_s2_maj">M.T. in Chemical Engineering</td>
+          <td>2022 - 2024</td>
+          <td>3.92</td>
+          <td data-i18n="loc_pal">Palembang, Indonesia</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="edu_d4">Bachelor of Applied Science (DIV)</span> <a href="https://drive.google.com/file/d/1ILNBE2QLJ-JkUbI7eagU_b3a09UUf7xR/view?usp=sharing">🖨️</a></td>
+          <td>Politeknik Negeri Sriwijaya</td>
+          <td data-i18n="edu_d4_maj">S.Tr.T. Chemical Engineering</td>
+          <td>2020 - 2022</td>
+          <td>3.90</td>
+          <td data-i18n="loc_pal">Palembang, Indonesia</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="edu_s1">Bachelor's Degree (S1)</span> <a href="https://drive.google.com/file/d/1OeA_RyMDvejzXN4OgDshq0z7gz8k9RY3/view?usp=sharing">🖨️</a></td>
+          <td>STIA & Pemerintahan Annisa Dwi Salfaritzi</td>
+          <td data-i18n="edu_s1_maj">S.IP. Government Studies</td>
+          <td>2007 - 2012</td>
+          <td>3.37</td>
+          <td data-i18n="loc_pal">Palembang, Indonesia</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="edu_d3">Associate Degree (DIII)</span> <a href="https://drive.google.com/file/d/1O4aonttqgOQtUsiRnDoUFk51hWg3e-6K/view?usp=sharing">🖨️</a></td>
+          <td>Politeknik Negeri Sriwijaya</td>
+          <td data-i18n="edu_d3_maj">A.Md. Chemical Engineering</td>
+          <td>2007 - 2010</td>
+          <td>3.92</td>
+          <td data-i18n="loc_pal">Palembang, Indonesia</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- D. ADDRESS -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secD_title">D. Address Information</div>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_addr_type">Address Type</th>
+          <th data-i18n="th_street">Street Address</th>
+          <th data-i18n="th_hno">House No.</th>
+          <th data-i18n="th_dist">District</th>
+          <th data-i18n="th_city">City / Regency</th>
+          <th data-i18n="th_prov">Province</th>
+          <th data-i18n="th_post">Postal Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-i18n="addr_dom">Domicile</td>
+          <td>Lrg. Produksim RT.019/005 Kel. Duku <a href="https://maps.app.goo.gl/kzyCX3tFL94ARLhg7">🌍</a></td>
+          <td>16</td>
+          <td>Ilir Timur Tiga</td>
+          <td data-i18n="city_pal">Palembang City</td>
+          <td data-i18n="prov_sum">South Sumatra</td>
+          <td>30111</td>
+        </tr>
+        <tr>
+          <td data-i18n="addr_ktp">ID Card (KTP)</td>
+          <td>Lrg. Produksim RT.019/005 Kel. Duku</td>
+          <td>16</td>
+          <td>Ilir Timur Tiga</td>
+          <td data-i18n="city_pal">Palembang City</td>
+          <td data-i18n="prov_sum">South Sumatra</td>
+          <td>30111</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- E. COMPETENCIES -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secE_title">E. Key Competencies</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 40px;" data-i18n="th_no">No</th>
+          <th data-i18n="th_comp">Competency Name</th>
+          <th data-i18n="th_prof">Proficiency Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td data-i18n="comp_1">Equipment Readiness & Fleet Optimization</td><td data-i18n="prof_exp">Expert</td></tr>
+        <tr><td>2</td><td data-i18n="comp_2">Resource Allocation & Crew Scheduling</td><td data-i18n="prof_mas">Mastery</td></tr>
+        <tr><td>3</td><td data-i18n="comp_3">Enterprise Resource Planning (ERP) - SAP Operational Management</td><td data-i18n="prof_mas">Mastery</td></tr>
+        <tr><td>4</td><td data-i18n="comp_4">SAP Plant Maintenance & Inventory Management</td><td data-i18n="prof_exp">Expert</td></tr>
+        <tr><td>5</td><td data-i18n="comp_5">SAP Financial Cost Accounting & Statement Review</td><td data-i18n="prof_skill">Skillful Application</td></tr>
+        <tr><td>6</td><td data-i18n="comp_6">Well Stimulation (Job Design, Field Execution & Post-Job Evaluation)</td><td data-i18n="prof_mas">Mastery</td></tr>
+        <tr><td>7</td><td data-i18n="comp_7">High/Low Pressure Equipment Maintenance and Operation</td><td data-i18n="prof_exp">Expert</td></tr>
+        <tr><td>8</td><td data-i18n="comp_8">Stimulation Chemical Customization</td><td data-i18n="prof_exp">Expert</td></tr>
+        <tr><td>9</td><td data-i18n="comp_9">H2S, High Pressure and High Temperature Operation</td><td data-i18n="prof_mas">Mastery</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- F. CERTIFICATIONS -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secF_title">F. Certifications</div>
+    <table>
+      <thead>
+        <tr>
+          <th data-i18n="th_cert">Certification Name</th>
+          <th data-i18n="th_iss">Issuing Institution</th>
+          <th data-i18n="th_eff">Effective Date</th>
+          <th data-i18n="th_exp">Expiration Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span data-i18n="cert_1">Fire Prevention and Control Training</span> <a href="https://drive.google.com/file/d/16P6Q_NQIDtwSkt1Vq_Hb1T0wqm6A4AQO/view?usp=sharing">🖨️</a></td>
+          <td>TAFE (Technical & Further Education) - KSA</td>
+          <td>07/22/2026</td>
+          <td>07/21/2028</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="cert_2">H2S & SCBA Awareness Training</span> <a href="https://drive.google.com/file/d/16P6Q_NQIDtwSkt1Vq_Hb1T0wqm6A4AQO/view?usp=sharing">🖨️</a></td>
+          <td>TAFE (Technical & Further Education) - KSA</td>
+          <td>07/22/2026</td>
+          <td>07/21/2028</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="cert_3">Basic First Aid & CPR</span> <a href="https://drive.google.com/file/d/16P6Q_NQIDtwSkt1Vq_Hb1T0wqm6A4AQO/view?usp=sharing">🖨️</a></td>
+          <td>Halliburton KSA</td>
+          <td>07/20/2025</td>
+          <td>07/19/2027</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="cert_4">Driving License (SIM A)</span> <a href="https://drive.google.com/file/d/1I-MOj7j9gCT7g7onE6gvaYv-H0UfRDIO/view?usp=sharing">🖨️</a></td>
+          <td>Polrestabes Palembang</td>
+          <td>10/04/2022</td>
+          <td>10/03/2027</td>
+        </tr>
+        <tr>
+          <td><span data-i18n="cert_5">Driving License (SIM C)</span> <a href="https://drive.google.com/file/d/1I-MOj7j9gCT7g7onE6gvaYv-H0UfRDIO/view?usp=sharing">🖨️</a></td>
+          <td>Polrestabes Palembang</td>
+          <td>08/16/2026</td>
+          <td>08/15/2031</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- G. LANGUAGES -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secG_title">G. Languages</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 40px;" data-i18n="th_no">No</th>
+          <th data-i18n="th_lang">Language</th>
+          <th data-i18n="th_prof">Proficiency Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td data-i18n="lang_id">Bahasa Indonesia</td><td data-i18n="prof_native">Native or Bilingual Proficiency</td></tr>
+        <tr><td>2</td><td data-i18n="lang_plm">Bahasa Palembang</td><td data-i18n="prof_native">Native or Bilingual Proficiency</td></tr>
+        <tr><td>3</td><td data-i18n="lang_min">Bahasa Minangkabau</td><td data-i18n="prof_work">Professional Working Proficiency</td></tr>
+        <tr><td>4</td><td data-i18n="lang_en">English</td><td data-i18n="prof_work">Professional Working Proficiency</td></tr>
+        <tr><td>5</td><td data-i18n="lang_ar">Arabic</td><td data-i18n="prof_lim">Limited Working Proficiency</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- H. WORK EXPERIENCE -->
+  <div class="section-card">
+    <div class="section-title" data-i18n="secH_title">H. Professional Work Experience</div>
+    
+    <!-- Job 1 -->
+    <div class="job-block">
+      <div class="job-header-grid">
+        <div><span class="grid-label" data-i18n="lbl_comp_name">Company Name:</span> <strong style="color:#ffffff;">Halliburton Energy Services INC - Saudi Branch</strong></div>
+        <div><span class="grid-label" data-i18n="lbl_pos">Position:</span> <strong style="color:#38bdf8;">Service Leader - Coiled Tubing</strong></div>
+        <div><span class="grid-label" data-i18n="lbl_loc">Location:</span> <span data-i18n="loc_saudi">Saudi Arabia</span></div>
+        <div><span class="grid-label" data-i18n="lbl_period">Employment Period:</span> <span data-i18n="j1_period">01/15/2014 – 09/29/2026 (Permanent)</span></div>
+        <div><span class="grid-label" data-i18n="lbl_sup">Direct Supervisor:</span> Fauji Nehru Susanto (+62 812 5900 4406)</div>
+        <div><span class="grid-label" data-i18n="lbl_ben">Provided Benefits:</span> <span data-i18n="j1_ben">Flight tickets, equal rotation, company phone & laptop, housing & transportation</span></div>
+      </div>
+      <div class="job-description">
+        <strong data-i18n="lbl_resp">Job Responsibilities:</strong><br>
+        <strong data-i18n="j1_r1_t">Fleet Management:</strong> <span data-i18n="j1_r1_d">Comprehensively managed and coordinated 7 operational fleets, optimizing personnel assignment and equipment readiness to ensure seamless onshore coiled tubing and stimulation operations for Saudi Aramco projects.</span> <br>
+        <strong data-i18n="j1_r2_t">SAP System & Administrative Management:</strong> <span data-i18n="j1_r2_d">Operated the SAP system to support supply chain and maintenance management, including inventory/stock control (spare parts and consumables), maintenance scheduling, material requisitions, 3rd party service requisitions, equipment rentals, and personnel time entry.</span> <br>
+        <strong data-i18n="j1_r3_t">Technical Advisor & Chemical Champion:</strong> <span data-i18n="j1_r3_d">Acted as the primary technical advisor for operational and maintenance troubleshooting on high/low-pressure pumping and coiled tubing equipment, while serving as Chemical Champion responsible for designing operational chemical treatments.</span> <br>
+        <strong data-i18n="j1_r4_t">Logistics & Mobilization Coordination:</strong> <span data-i18n="j1_r4_d">Collaborated closely with dispatchers to streamline the mobilization and demobilization of personnel, technical equipment, and chemical materials to job sites and Saudi Aramco rigs.</span> <br>
+        <strong data-i18n="j1_r5_t">Stakeholder Management:</strong> <span data-i18n="j1_r5_d">Maintained regular professional communication with Saudi Aramco engineers regarding job acceptance approvals, execution oversight, and post-job performance feedback.</span> <br>
+        <strong data-i18n="j1_r6_t">HSE Compliance & Performance Standards:</strong> <span data-i18n="j1_r6_d">Ensured all field operations strictly complied with Health, Safety, and Environment (HSE) standards, Halliburton technical procedures, and client performance targets.</span>
+      </div>
+      <div style="margin-top: 4px; font-size: 7.5pt; color: #94a3b8;">
+        <strong data-i18n="lbl_resign">Reason for Resignation:</strong> <span data-i18n="j1_resign_val">Voluntary Resignation (Pressing personal and family reasons regarding child health care).</span> 👉 <span data-i18n="lbl_doc">Documentation</span> <a href="https://drive.google.com/file/d/1s06N-or29PnqE69rmFl2DCyh_YmwLANU/view?usp=sharing">🖨️</a>
+      </div>
+    </div>
+
+    <!-- Job 2 -->
+    <div class="job-block">
+      <div class="job-header-grid">
+        <div><span class="grid-label" data-i18n="lbl_comp_name">Company Name:</span> <strong style="color:#ffffff;">PT. Dowell Anadrill Schlumberger</strong></div>
+        <div><span class="grid-label" data-i18n="lbl_pos">Position:</span> <strong style="color:#38bdf8;">Field Specialist</strong></div>
+        <div><span class="grid-label" data-i18n="lbl_loc">Location:</span> <span data-i18n="j2_loc">Indonesia, DKI Jakarta, North Jakarta (Cilincing)</span></div>
+        <div><span class="grid-label" data-i18n="lbl_period">Employment Period:</span> <span data-i18n="j2_period">03/01/2011 – 12/01/2013 (Permanent)</span></div>
+        <div><span class="grid-label" data-i18n="lbl_sup">Direct Supervisor:</span> Taufik Kalangsunda (+62 817 715 942)</div>
+        <div><span class="grid-label" data-i18n="lbl_ben">Provided Benefits:</span> <span data-i18n="j2_ben">Laptop, company phone, staff house, and transportation</span></div>
+      </div>
+      <div class="job-description">
+        <strong data-i18n="lbl_resp">Job Responsibilities:</strong><br>
+        <strong data-i18n="j2_r1_t">Job Planning & Design:</strong> <span data-i18n="j2_r1_d">Actively contributed to and provided technical support during the planning and engineering design phases for various well stimulation methods.</span> <br>
+        <strong data-i18n="j2_r2_t">Field Execution:</strong> <span data-i18n="j2_r2_d">Led, supervised, and executed field operations to ensure all stimulation phases were conducted safely, efficiently, and in compliance with engineering standards.</span> <br>
+        <strong data-i18n="j2_r3_t">Post-Job Evaluation:</strong> <span data-i18n="j2_r3_d">Performed comprehensive analyses and evaluations of post-stimulation job results to optimize well performance.</span> <br>
+        <strong data-i18n="j2_r4_t">Technical Stimulation Expertise:</strong> <span data-i18n="j2_r4_d">Possessed deep domain expertise and a proven field track record in handling diverse stimulation projects, including but not limited to: 1. Sand Control 2. Conventional & Unconventional Hydraulic Fracturing 3. Matrix Stimulation / Treatments (acidizing in sandstone and carbonate formations) 4. Organic Deposit Removal 5. Water Control and Well Clean-Up operations.</span>
+      </div>
+      <div style="margin-top: 4px; font-size: 7.5pt; color: #94a3b8;">
+        <strong data-i18n="lbl_resign">Reason for Resignation:</strong> <span data-i18n="j2_resign_val">Voluntary Resignation (Pursuing international career development overseas).</span> 👉 <span data-i18n="lbl_doc">Documentation</span> <a href="https://drive.google.com/file/d/1KcSBxK6BCKUc9o9KRduotwX8OzsRx4V_/view?usp=sharing">🖨️</a>
+      </div>
+    </div>
+
+    <!-- Job 3 -->
+    <div class="job-block">
+      <div class="job-header-grid">
+        <div><span class="grid-label" data-i18n="lbl_comp_name">Company Name:</span> <strong style="color:#ffffff;">Environmental Research Center (PPLH), Universitas Sriwijaya</strong></div>
+        <div><span class="grid-label" data-i18n="lbl_pos">Position:</span> <strong style="color:#38bdf8;" data-i18n="j3_pos">Environmental Expert / Consultant</strong></div>
+        <div><span class="grid-label" data-i18n="lbl_loc">Location:</span> <span data-i18n="j3_loc">Indonesia, South Sumatra, Palembang City</span></div>
+        <div><span class="grid-label" data-i18n="lbl_period">Employment Period:</span> <span data-i18n="j3_period">04/01/2010 – 02/28/2011 (Permanent)</span></div>
+        <div><span class="grid-label" data-i18n="lbl_sup">Direct Supervisor:</span> Zaidan P Negara (+62 813 7329 5519)</div>
+        <div><span class="grid-label" data-i18n="lbl_ben">Provided Benefits:</span> <span data-i18n="j3_ben">Laptop, mobile phone, printer, accommodation, and travel allowances</span></div>
+      </div>
+      <div class="job-description">
+        <strong data-i18n="lbl_resp">Job Responsibilities:</strong><br>
+        <strong data-i18n="j3_r1_t">Environmental Control:</strong> <span data-i18n="j3_r1_d">Responsible for advising and directing corporate partners—including those in the oil and gas sector—to effectively control, monitor, and minimize operational impacts on the workplace environment.</span> <br>
+        <strong data-i18n="j3_r2_t">Environmental Documentation & Implementation:</strong> <span data-i18n="j3_r2_d">Managed and facilitated end-to-end statutory environmental document frameworks, including: 1. Environmental Impact Assessment (AMDAL) 2. Environmental Management & Monitoring Efforts (UKL/UPL) 3. Environmental Management & Monitoring Plans (RKL/RPL).</span> <br>
+        <strong data-i18n="j3_r3_t">Regulatory Compliance:</strong> <span data-i18n="j3_r3_d">Ensured clients' operational activities strictly aligned with applicable Indonesian environmental laws and statutory standards to mitigate legal and ecological risks.</span>
+      </div>
+      <div style="margin-top: 4px; font-size: 7.5pt; color: #94a3b8;">
+        <strong data-i18n="lbl_resign">Reason for Resignation:</strong> <span data-i18n="j3_resign_val">Transitioned professionally to Schlumberger (SLB).</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const translations = {
+  en: {
+    subtitle: "Curriculum Vitae",
+    secA_title: "A. Personal Data",
+    lbl_name: "Full Name",
+    lbl_pob: "Place, Date of Birth",
+    lbl_gender: "Gender",
+    val_gender: ": Male",
+    lbl_nationality: "Nationality",
+    val_nationality: ": Indonesian",
+    lbl_email: "Email",
+    lbl_religion: "Religion",
+    val_religion: ": Islam",
+    lbl_phone: "Phone / Whatsapp",
+    val_phone: "Click Here (081274126064)",
+    lbl_marital: "Marital Status",
+    val_marital: ": Married",
+    lbl_nik: "National ID (NIK)",
+    lbl_hw: "Height / Weight",
+    honors_title: "Honors & Achievements:",
+    ach_1: "Outstanding Student Award",
+    ach_1_sub: ", Sriwijaya State Polytechnic, Palembang, Indonesia (2009)",
+    ach_2: "Best Graduate (Associate Degree / D3)",
+    ach_2_sub: ", Sriwijaya State Polytechnic, Palembang, Indonesia (2010)",
+    ach_3: "Top of the Class, Schlumberger Technical School, Oklahoma, USA (2013) 👇 Cert is linked on Section H",
+    ach_4: "Participant, Halliburton StimChem Custom Chemistry Workshop, Pune, India (2024) 👇 Cert is linked on Section H",
+    
+    secB_title: "B. Family Structure",
+    th_rel: "Relationship",
+    th_name: "Name",
+    th_occ: "Occupation",
+    fam_f: "Father",
+    fam_f_occ: "Entrepreneur / Private Employee",
+    fam_m: "Mother",
+    fam_w: "Wife",
+    fam_hw: "Housewife",
+    fam_d: "Daughter",
+    fam_d1_occ: "Student - Elementary school",
+    fam_d2_occ: "Student - kindergarten",
+    
+    secC_title: "C. Education",
+    th_deg: "Degree Level",
+    th_sch: "School / University",
+    th_maj: "Major / Field of Study",
+    th_yr: "Year",
+    th_loc: "Location",
+    edu_s2: "Master's Degree (S2)",
+    edu_s2_maj: "M.T. in Chemical Engineering",
+    edu_d4: "Bachelor of Applied Science (DIV)",
+    edu_d4_maj: "S.Tr.T. Chemical Engineering",
+    edu_s1: "Bachelor's Degree (S1)",
+    edu_s1_maj: "S.IP. Government Studies",
+    edu_d3: "Associate Degree (DIII)",
+    edu_d3_maj: "A.Md. Chemical Engineering",
+    loc_pal: "Palembang, Indonesia",
+
+    secD_title: "D. Address Information",
+    th_addr_type: "Address Type",
+    th_street: "Street Address",
+    th_hno: "House No.",
+    th_dist: "District",
+    th_city: "City / Regency",
+    th_prov: "Province",
+    th_post: "Postal Code",
+    addr_dom: "Domicile",
+    addr_ktp: "ID Card (KTP)",
+    city_pal: "Palembang City",
+    prov_sum: "South Sumatra",
+
+    secE_title: "E. Key Competencies",
+    th_no: "No",
+    th_comp: "Competency Name",
+    th_prof: "Proficiency Level",
+    comp_1: "Equipment Readiness & Fleet Optimization",
+    comp_2: "Resource Allocation & Crew Scheduling",
+    comp_3: "Enterprise Resource Planning (ERP) - SAP Operational Management",
+    comp_4: "SAP Plant Maintenance & Inventory Management",
+    comp_5: "SAP Financial Cost Accounting & Statement Review",
+    comp_6: "Well Stimulation (Job Design, Field Execution & Post-Job Evaluation)",
+    comp_7: "High/Low Pressure Equipment Maintenance and Operation",
+    comp_8: "Stimulation Chemical Customization",
+    comp_9: "H2S, High Pressure and High Temperature Operation",
+    prof_exp: "Expert",
+    prof_mas: "Mastery",
+    prof_skill: "Skillful Application",
+
+    secF_title: "F. Certifications",
+    th_cert: "Certification Name",
+    th_iss: "Issuing Institution",
+    th_eff: "Effective Date",
+    th_exp: "Expiration Date",
+    cert_1: "Fire Prevention and Control Training",
+    cert_2: "H2S & SCBA Awareness Training",
+    cert_3: "Basic First Aid & CPR",
+    cert_4: "Driving License (SIM A)",
+    cert_5: "Driving License (SIM C)",
+
+    secG_title: "G. Languages",
+    th_lang: "Language",
+    lang_id: "Bahasa Indonesia",
+    lang_plm: "Bahasa Palembang",
+    lang_min: "Bahasa Minangkabau",
+    lang_en: "English",
+    lang_ar: "Arabic",
+    prof_native: "Native or Bilingual Proficiency",
+    prof_work: "Professional Working Proficiency",
+    prof_lim: "Limited Working Proficiency",
+
+    secH_title: "H. Professional Work Experience",
+    lbl_comp_name: "Company Name:",
+    lbl_pos: "Position:",
+    lbl_loc: "Location:",
+    lbl_period: "Employment Period:",
+    lbl_sup: "Direct Supervisor:",
+    lbl_ben: "Provided Benefits:",
+    lbl_resp: "Job Responsibilities:",
+    lbl_resign: "Reason for Resignation:",
+    lbl_doc: "Documentation",
+    loc_saudi: "Saudi Arabia",
+
+    j1_period: "01/15/2014 – 09/29/2026 (Permanent)",
+    j1_ben: "Flight tickets, equal rotation, company phone & laptop, housing & transportation",
+    j1_r1_t: "Fleet Management:",
+    j1_r1_d: "Comprehensively managed and coordinated 7 operational fleets, optimizing personnel assignment and equipment readiness to ensure seamless onshore coiled tubing and stimulation operations for Saudi Aramco projects.",
+    j1_r2_t: "SAP System & Administrative Management:",
+    j1_r2_d: "Operated the SAP system to support supply chain and maintenance management, including inventory/stock control (spare parts and consumables), maintenance scheduling, material requisitions, 3rd party service requisitions, equipment rentals, and personnel time entry.",
+    j1_r3_t: "Technical Advisor & Chemical Champion:",
+    j1_r3_d: "Acted as the primary technical advisor for operational and maintenance troubleshooting on high/low-pressure pumping and coiled tubing equipment, while serving as Chemical Champion responsible for designing operational chemical treatments.",
+    j1_r4_t: "Logistics & Mobilization Coordination:",
+    j1_r4_d: "Collaborated closely with dispatchers to streamline the mobilization and demobilization of personnel, technical equipment, and chemical materials to job sites and Saudi Aramco rigs.",
+    j1_r5_t: "Stakeholder Management:",
+    j1_r5_d: "Maintained regular professional communication with Saudi Aramco engineers regarding job acceptance approvals, execution oversight, and post-job performance feedback.",
+    j1_r6_t: "HSE Compliance & Performance Standards:",
+    j1_r6_d: "Ensured all field operations strictly complied with Health, Safety, and Environment (HSE) standards, Halliburton technical procedures, and client performance targets.",
+    j1_resign_val: "Voluntary Resignation (Pressing personal and family reasons regarding child health care).",
+
+    j2_loc: "Indonesia, DKI Jakarta, North Jakarta (Cilincing)",
+    j2_period: "03/01/2011 – 12/01/2013 (Permanent)",
+    j2_ben: "Laptop, company phone, staff house, and transportation",
+    j2_r1_t: "Job Planning & Design:",
+    j2_r1_d: "Actively contributed to and provided technical support during the planning and engineering design phases for various well stimulation methods.",
+    j2_r2_t: "Field Execution:",
+    j2_r2_d: "Led, supervised, and executed field operations to ensure all stimulation phases were conducted safely, efficiently, and in compliance with engineering standards.",
+    j2_r3_t: "Post-Job Evaluation:",
+    j2_r3_d: "Performed comprehensive analyses and evaluations of post-stimulation job results to optimize well performance.",
+    j2_r4_t: "Technical Stimulation Expertise:",
+    j2_r4_d: "Possessed deep domain expertise and a proven field track record in handling diverse stimulation projects, including but not limited to: 1. Sand Control 2. Conventional & Unconventional Hydraulic Fracturing 3. Matrix Stimulation / Treatments (acidizing in sandstone and carbonate formations) 4. Organic Deposit Removal 5. Water Control and Well Clean-Up operations.",
+    j2_resign_val: "Voluntary Resignation (Pursuing international career development overseas).",
+
+    j3_pos: "Environmental Expert / Consultant",
+    j3_loc: "Indonesia, South Sumatra, Palembang City",
+    j3_period: "04/01/2010 – 02/28/2011 (Permanent)",
+    j3_ben: "Laptop, mobile phone, printer, accommodation, and travel allowances",
+    j3_r1_t: "Environmental Control:",
+    j3_r1_d: "Responsible for advising and directing corporate partners—including those in the oil and gas sector—to effectively control, monitor, and minimize operational impacts on the workplace environment.",
+    j3_r2_t: "Environmental Documentation & Implementation:",
+    j3_r2_d: "Managed and facilitated end-to-end statutory environmental document frameworks, including: 1. Environmental Impact Assessment (AMDAL) 2. Environmental Management & Monitoring Efforts (UKL/UPL) 3. Environmental Management & Monitoring Plans (RKL/RPL).",
+    j3_r3_t: "Regulatory Compliance:",
+    j3_r3_d: "Ensured clients' operational activities strictly aligned with applicable Indonesian environmental laws and statutory standards to mitigate legal and ecological risks.",
+    j3_resign_val: "Transitioned professionally to Schlumberger (SLB)."
+  },
+  id: {
+    subtitle: "Daftar Riwayat Hidup",
+    secA_title: "A. Data Pribadi",
+    lbl_name: "Nama Lengkap",
+    lbl_pob: "Tempat, Tanggal Lahir",
+    lbl_gender: "Jenis Kelamin",
+    val_gender: ": Laki-Laki",
+    lbl_nationality: "Kewarganegaraan",
+    val_nationality: ": Indonesia",
+    lbl_email: "Email",
+    lbl_religion: "Agama",
+    val_religion: ": Islam",
+    lbl_phone: "Telepon / Whatsapp",
+    val_phone: "Klik Di Sini (081274126064)",
+    lbl_marital: "Status Pernikahan",
+    val_marital: ": Menikah",
+    lbl_nik: "NIK / No. KTP",
+    lbl_hw: "Tinggi / Berat Badan",
+    honors_title: "Penghargaan & Prestasi:",
+    ach_1: "Penghargaan Mahasiswa Berprestasi Utama",
+    ach_1_sub: ", Politeknik Negeri Sriwijaya, Palembang, Indonesia (2009)",
+    ach_2: "Lulusan Terbaik (Diploma III / D3)",
+    ach_2_sub: ", Politeknik Negeri Sriwijaya, Palembang, Indonesia (2010)",
+    ach_3: "Lulusan Terbaik (Top of the Class), Schlumberger Technical School, Oklahoma, USA (2013) 👇 Sertifikat tertaut pada Bagian H",
+    ach_4: "Peserta Workshop Kimia Khusus Halliburton StimChem, Pune, India (2024) 👇 Sertifikat tertaut pada Bagian H",
+    
+    secB_title: "B. Susunan Keluarga",
+    th_rel: "Hubungan Keluarga",
+    th_name: "Nama",
+    th_occ: "Pekerjaan",
+    fam_f: "Ayah",
+    fam_f_occ: "Wiraswasta / Karyawan Swasta",
+    fam_m: "Ibu",
+    fam_w: "Istri",
+    fam_hw: "Ibu Rumah Tangga",
+    fam_d: "Anak Perempuan",
+    fam_d1_occ: "Pelajar - Sekolah Dasar (SD)",
+    fam_d2_occ: "Pelajar - Taman Kanak-Kanak (TK)",
+    
+    secC_title: "C. Pendidikan",
+    th_deg: "Jenjang Pendidikan",
+    th_sch: "Sekolah / Universitas",
+    th_maj: "Jurusan / Program Studi",
+    th_yr: "Tahun",
+    th_loc: "Lokasi",
+    edu_s2: "Magister / Pascasarjana (S2)",
+    edu_s2_maj: "M.T. Teknik Kimia",
+    edu_d4: "Sarjana Terapan (DIV)",
+    edu_d4_maj: "S.Tr.T. Teknik Kimia",
+    edu_s1: "Sarjana (S1)",
+    edu_s1_maj: "S.IP. Ilmu Pemerintahan",
+    edu_d3: "Diploma III (D3)",
+    edu_d3_maj: "A.Md. Teknik Kimia",
+    loc_pal: "Palembang, Indonesia",
+
+    secD_title: "D. Informasi Alamat",
+    th_addr_type: "Jenis Alamat",
+    th_street: "Alamat Jalan",
+    th_hno: "No. Rumah",
+    th_dist: "Kecamatan",
+    th_city: "Kota / Kabupaten",
+    th_prov: "Provinsi",
+    th_post: "Kode Pos",
+    addr_dom: "Domisili",
+    addr_ktp: "KTP",
+    city_pal: "Kota Palembang",
+    prov_sum: "Sumatera Selatan",
+
+    secE_title: "E. Kompetensi Utama",
+    th_no: "No",
+    th_comp: "Nama Kompetensi",
+    th_prof: "Tingkat Keahlian",
+    comp_1: "Kesiapan Peralatan & Optimalisasi Armada",
+    comp_2: "Alokasi Sumber Daya & Penjadwalan Kru",
+    comp_3: "Enterprise Resource Planning (ERP) - Manajemen Operasional SAP",
+    comp_4: "Pemeliharaan Pabrik & Manajemen Inventaris SAP",
+    comp_5: "Akuntansi Biaya Keuangan & Peninjauan Laporan SAP",
+    comp_6: "Stimulasi Sumur (Desain Pekerjaan, Eksekusi Lapangan & Evaluasi)",
+    comp_7: "Pengoperasian & Pemeliharaan Peralatan Tekanan Tinggi/Rendah",
+    comp_8: "Kustomisasi Bahan Kimia Stimulasi",
+    comp_9: "Operasi H2S, Tekanan Tinggi & Temperatur Tinggi",
+    prof_exp: "Sangat Ahli (Expert)",
+    prof_mas: "Mahir (Mastery)",
+    prof_skill: "Penerapan Mahir",
+
+    secF_title: "F. Sertifikasi",
+    th_cert: "Nama Sertifikasi",
+    th_iss: "Lembaga Penerbit",
+    th_eff: "Tanggal Berlaku",
+    th_exp: "Tanggal Kadaluarsa",
+    cert_1: "Pelatihan Pencegahan & Penanggulangan Kebakaran",
+    cert_2: "Pelatihan Kesadaran H2S & SCBA",
+    cert_3: "Pertolongan Pertama (Basic First Aid) & CPR",
+    cert_4: "Surat Izin Mengemudi (SIM A)",
+    cert_5: "Surat Izin Mengemudi (SIM C)",
+
+    secG_title: "G. Bahasa",
+    th_lang: "Bahasa",
+    lang_id: "Bahasa Indonesia",
+    lang_plm: "Bahasa Palembang",
+    lang_min: "Bahasa Minangkabau",
+    lang_en: "Bahasa Inggris",
+    lang_ar: "Bahasa Arab",
+    prof_native: "Kemampuan Penutur Asli",
+    prof_work: "Kemampuan Kerja Profesional",
+    prof_lim: "Kemampuan Kerja Terbatas",
+
+    secH_title: "H. Pengalaman Kerja Profesional",
+    lbl_comp_name: "Nama Perusahaan:",
+    lbl_pos: "Jabatan:",
+    lbl_loc: "Lokasi:",
+    lbl_period: "Masa Kerja:",
+    lbl_sup: "Atasan Langsung:",
+    lbl_ben: "Fasilitas Ditanggung:",
+    lbl_resp: "Tanggung Jawab Pekerjaan:",
+    lbl_resign: "Alasan Berhenti Kerja:",
+    lbl_doc: "Dokumentasi",
+    loc_saudi: "Arab Saudi",
+
+    j1_period: "15/01/2014 – 29/09/2026 (Tetap)",
+    j1_ben: "Tiket pesawat, rotasi seimbang, HP & laptop kantor, tempat tinggal & transportasi",
+    j1_r1_t: "Manajemen Armada:",
+    j1_r1_d: "Mengelola dan mengoordinasikan 7 armada operasional secara komprehensif, mengoptimalkan penugasan personel serta kesiapan peralatan untuk memastikan kelancaran operasi darat coiled tubing dan stimulasi pada proyek Saudi Aramco.",
+    j1_r2_t: "Sistem SAP & Administrasi:",
+    j1_r2_d: "Pengoperasian sistem SAP untuk mendukung rantai pasok dan manajemen pemeliharaan, mencakup kontrol stok/inventaris, penjadwalan pemeliharaan, permintaan material, jasa pihak ketiga, penyewaan alat, dan rekap jam kerja personel.",
+    j1_r3_t: "Penasihat Teknis & Champion Kimia:",
+    j1_r3_d: "Bertindak sebagai penasihat teknis utama untuk pemecahan masalah operasional dan pemeliharaan pada peralatan pompa tekanan tinggi/rendah dan coiled tubing, serta bertugas merancang formulasi kimia operasional.",
+    j1_r4_t: "Koordinasi Logistik & Mobilisasi:",
+    j1_r4_d: "Bekerja sama erat dengan disptacher untuk melancarkan proses mobilisasi dan demobilisasi personel, peralatan teknis, dan bahan kimia ke lokasi kerja dan rig Saudi Aramco.",
+    j1_r5_t: "Manajemen Pemangku Kepentingan:",
+    j1_r5_d: "Membangun komunikasi profesional yang efektif dengan insinyur Saudi Aramco terkait persetujuan pekerjaan, pengawasan eksekusi, hingga evaluasi kinerja pasca-pekerjaan.",
+    j1_r6_t: "Kepatuhan K3L & Standar Kinerja:",
+    j1_r6_d: "Memastikan seluruh operasi lapangan mematuhi standar Keselamatan, Kesehatan Kerja dan Lingkungan (K3L), prosedur teknis Halliburton, dan target kinerja klien.",
+    j1_resign_val: "Mengundurkan Diri Secara Sukarela (Mendesak karena alasan pribadi dan keluarga terkait perawatan kesehatan anak).",
+
+    j2_loc: "Indonesia, DKI Jakarta, Jakarta Utara (Cilincing)",
+    j2_period: "01/03/2011 – 01/12/2013 (Tetap)",
+    j2_ben: "Laptop, HP kantor, rumah dinas staf, dan transportasi",
+    j2_r1_t: "Perencanaan & Desain Pekerjaan:",
+    j2_r1_d: "Berperan aktif memberikan dukungan teknis selama tahap perencanaan dan desain rekayasa untuk berbagai metode stimulasi sumur.",
+    j2_r2_t: "Eksekusi Lapangan:",
+    j2_r2_d: "Memimpin, mengawasi, dan mengeksekusi operasi lapangan untuk memastikan semua tahapan stimulasi berjalan aman, efisien, dan sesuai standar keteknikan.",
+    j2_r3_t: "Evaluasi Pasca-Pekerjaan:",
+    j2_r3_d: "Melakukan analisis komprehensif dan evaluasi hasil stimulasi untuk mengoptimalkan performa produksi sumur.",
+    j2_r4_t: "Keahlian Teknis Stimulasi:",
+    j2_r4_d: "Memiliki keahlian mendalam dan rekam jejak lapangan terbukti dalam penanganan proyek stimulasi meliputi: 1. Sand Control 2. Hydraulic Fracturing Konvensional & Non-Konvensional 3. Stimulation / Treatment Matriks (pengasaman formasi batu pasir & karbonat) 4. Pembersihan Endapan Organik 5. Operasi Water Control dan Pembersihan Sumur.",
+    j2_resign_val: "Mengundurkan Diri Secara Sukarela (Mengembangkan karir internasional di luar negeri).",
+
+    j3_pos: "Ahli / Konsultan Lingkungan Hidup",
+    j3_loc: "Indonesia, Sumatera Selatan, Kota Palembang",
+    j3_period: "01/04/2010 – 28/02/2011 (Tetap)",
+    j3_ben: "Laptop, ponsel, printer, akomodasi, dan uang jalan",
+    j3_r1_t: "Pengendalian Lingkungan:",
+    j3_r1_d: "Bertanggung jawab memberikan arahan dan panduan kepada mitra perusahaan—termasuk sektor migas—untuk mengendalikan, memantau, dan meminimalkan dampak operasional terhadap lingkungan kerja.",
+    j3_r2_t: "Dokumentasi Lingkungan & Implementasi:",
+    j3_r2_d: "Mengelola dan memfasilitasi kerangka dokumen lingkungan hidup wajib, meliputi: 1. Analisis Mengenai Dampak Lingkungan (AMDAL) 2. Upaya Pengelolaan & Pemantauan Lingkungan (UKL/UPL) 3. Rencana Pengelolaan & Pemantauan Lingkungan (RKL/RPL).",
+    j3_r3_t: "Kepatuhan Regulasi:",
+    j3_r3_d: "Memastikan kegiatan operasional klien mematuhi undang-undang dan peraturan lingkungan hidup Indonesia untuk meminimalkan risiko hukum dan ekologis.",
+    j3_resign_val: "Beralih karir secara profesional ke Schlumberger (SLB)."
+  },
+  ar: {
+    subtitle: "السيرة الذاتية",
+    secA_title: "أ. البيانات الشخصية",
+    lbl_name: "الاسم الكامل",
+    lbl_pob: "مكان وتاريخ الميلاد",
+    lbl_gender: "الجنس",
+    val_gender: ": ذكر",
+    lbl_nationality: "الجنسية",
+    val_nationality: ": إندونيسي",
+    lbl_email: "البريد الإلكتروني",
+    lbl_religion: "الديانة",
+    val_religion: ": الإسلام",
+    lbl_phone: "الهاتف / واتساب",
+    val_phone: "انقر هنا (081274126064)",
+    lbl_marital: "الحالة الاجتماعية",
+    val_marital: ": متزوج",
+    lbl_nik: "رقم الهوية الوطنية",
+    lbl_hw: "الطول / الوزن",
+    honors_title: "الجوائز والإنجازات:",
+    ach_1: "جائزة الطالب المتفوق المتميز",
+    ach_1_sub: "، معهد سريويجايا الحكومي للتقنية، باليمبانغ، إندونيسيا (2009)",
+    ach_2: "أفضل خريج (الدبلوم / D3)",
+    ach_2_sub: "، معهد سريويجايا الحكومي للتقنية، باليمبانغ، إندونيسيا (2010)",
+    ach_3: "الأول على الدفعة، مدرسة شلومبرجير الفنية، أوكلاهوما، الولايات المتحدة (2013) 👇 الشهادة مربوطة في القسم H",
+    ach_4: "مشارك في ورشة عمل هاليبرتون للتقنيات الكيميائية (StimChem)، بونه، الهند (2024) 👇 الشهادة مربوطة في القسم H",
+    
+    secB_title: "ب. الهيكل الأسري",
+    th_rel: "صلة القرابة",
+    th_name: "الاسم",
+    th_occ: "المهنة",
+    fam_f: "الأب",
+    fam_f_occ: "رجل أعمال / موظف قطاع خاص",
+    fam_m: "الأم",
+    fam_w: "الزوجة",
+    fam_hw: "ربة منزل",
+    fam_d: "الابنة",
+    fam_d1_occ: "طالبة - المرحلة الابتدائية",
+    fam_d2_occ: "طالبة - مرحلة رياض الأطفال",
+    
+    secC_title: "ج. المؤهلات التعليمية",
+    th_deg: "الدرجة العلمية",
+    th_sch: "المدرسة / الجامعة",
+    th_maj: "التخصص / مجال الدراسة",
+    th_yr: "السنة",
+    th_loc: "الموقع",
+    edu_s2: "الماجستير (S2)",
+    edu_s2_maj: "ماجستير الهندسة الكيميائية",
+    edu_d4: "بكالوريوس العلوم التطبيقية (DIV)",
+    edu_d4_maj: "بكالوريوس الهندسة الكيميائية التطبيقية",
+    edu_s1: "البكالوريوس (S1)",
+    edu_s1_maj: "بكالوريوس العلوم السياسية والحكومية",
+    edu_d3: "الدبلوم المشارك (DIII)",
+    edu_d3_maj: "دبلوم الهندسة الكيميائية",
+    loc_pal: "باليمبانغ، إندونيسيا",
+
+    secD_title: "د. معلومات العنوان",
+    th_addr_type: "نوع العنوان",
+    th_street: "عنوان الشارع",
+    th_hno: "رقم المنزل",
+    th_dist: "المنطقة / الحي",
+    th_city: "المدينة / المحافظة",
+    th_prov: "الولاية / المقاطعة",
+    th_post: "الرمز البريدي",
+    addr_dom: "محل الإقامة",
+    addr_ktp: "العنوان المسجل بالهوية",
+    city_pal: "مدينة باليمبانغ",
+    prov_sum: "سومطرة الجنوبية",
+
+    secE_title: "هـ. الكفاءات الرئيسية",
+    th_no: "م",
+    th_comp: "اسم الكفاءة",
+    th_prof: "مستوى الإتقان",
+    comp_1: "جاهزية المعدات وتحسين إدارة الأسطول",
+    comp_2: "تخصيص الموارد وجدولة أطقم العمل",
+    comp_3: "تخطيط موارد المؤسسات (ERP) - إدارة عمليات SAP",
+    comp_4: "إدارة صيانة المصانع والمخزون في SAP",
+    comp_5: "محاسبة التكاليف المالية ومراجعة القوائم في SAP",
+    comp_6: "تحفيز الآبار (تصميم العمليات، التنفيذ الميداني وتقييم ما بعد العمل)",
+    comp_7: "تشغيل وصيانة معدات الضغط العالي والمنخفض",
+    comp_8: "تخصيص وتركيب المواد الكيميائية لتحفيز الآبار",
+    comp_9: "عمليات كبريتيد الهيدروجين (H2S)، الضغط العالي والحرارة العالية",
+    prof_exp: "خبير (Expert)",
+    prof_mas: "إتقان تام (Mastery)",
+    prof_skill: "تطبيق متتقدم",
+
+    secF_title: "و. الشهادات والدورات التدريبية",
+    th_cert: "اسم الشهادة",
+    th_iss: "الجهة المنظمة",
+    th_eff: "تاريخ الاستحقاق",
+    th_exp: "تاريخ الانتهاء",
+    cert_1: "تدريب الوقاية من الحرائق ومكافحتها",
+    cert_2: "تدريب التوعية بغاز H2S وأجهزة التنفس SCBA",
+    cert_3: "الإسعافات الأولية الأساسية والإنعاش قلبي رئوي",
+    cert_4: "رخصة قيادة سيارة (SIM A)",
+    cert_5: "رخصة قيادة دراجة نارية (SIM C)",
+
+    secG_title: "ز. اللغات",
+    th_lang: "اللغة",
+    lang_id: "الإندونيسية",
+    lang_plm: "لهجة باليمبانغ",
+    lang_min: "لهجة مينانغكاباو",
+    lang_en: "الإنجليزية",
+    lang_ar: "العربية",
+    prof_native: "اللغة الأم / إتقان تام",
+    prof_work: "إتقان مهني احترافي",
+    prof_lim: "إتقان محدود للعمل",
+
+    secH_title: "ح. الخبرات المهنية",
+    lbl_comp_name: "اسم الشركة:",
+    lbl_pos: "المنصب:",
+    lbl_loc: "الموقع:",
+    lbl_period: "فترة العمل:",
+    lbl_sup: "المشرف المباشر:",
+    lbl_ben: "المزايا والبدلات:",
+    lbl_resp: "المهام والمسؤوليات:",
+    lbl_resign: "سبب الاستقالة:",
+    lbl_doc: "الوثائق والمستندات",
+    loc_saudi: "المملكة العربية السعودية",
+
+    j1_period: "15/01/2014 – 29/09/2026 (دائم)",
+    j1_ben: "تذاكر طيران، نظام مناوبة متوازن، هاتف ولابتوب عمل، سكن ومواصلات",
+    j1_r1_t: "إدارة الأسطول:",
+    j1_r1_d: "إدارة وتنسيق 7 أساطيل تشغيلية بشكل شامل، وتحسين توزيع الموظفين وجاهزية المعدات لضمان سير عمليات الأنابيب الملتفة (Coiled Tubing) وتحفيز الآبار البرية لمشاريع أرامكو السعودية.",
+    j1_r2_t: "نظام SAP والإدارة الإدارية:",
+    j1_r2_d: "تشغيل نظام SAP لدعم سلاسل الإمداد وإدارة الصيانة، بما في ذلك مراقبة المخزون، جدولة الصيانة، طلبات المواد، طلبات خدمات الطرف الثالث، استئجار المعدات، وتسجيل ساعات عمل الموظفين.",
+    j1_r3_t: "المستشار الفني وخبير الكيميائيات:",
+    j1_r3_d: "القيام بدور المستشار الفني الرئيسي لحل المشكلات التشغيلية والصيانة لمعدات الضخ والأنبوب الملتف ذات الضغط العالي والمنخفض، مع العمل كمسؤول أول عن تصميم المعالجات الكيميائية التشغيلية.",
+    j1_r4_t: "تنسيق اللوجستيات والنقل:",
+    j1_r4_d: "التعاون الوثيق مع مسؤولي الحركة لتبسيط نقل وحشد الموظفين والمعدات الفنية والمواد الكيميائية إلى مواقع العمل ومنصات أرامكو السعودية.",
+    j1_r5_t: "إدارة العلاقات مع العملاء:",
+    j1_r5_d: "الحفاظ على تواصل مهني منتظم مع مهندسي أرامكو السعودية بشأن الموافقة على الأعمال، الإشراف على التنفيذ، وتقييم الأداء بعد انتهاء المهام.",
+    j1_r6_t: "الالتزام بالسلامة والمعايير (HSE):",
+    j1_r6_d: "ضمان امتثال جميع العمليات الميدانية الصارم لمعايير الصحة والسلامة والبيئة، والإجراءات الفنية لشركة هاليبرتون، وأهداف أداء العملاء.",
+    j1_resign_val: "استقالة طوعية (لأسباب شخصية وعائلية ملحة تتعلق بالرعاية الصحية للأطفال).",
+
+    j2_loc: "إندونيسيا، جاكرتا، شمال جاكرتا (سيلينسينغ)",
+    j2_period: "01/03/2011 – 01/12/2013 (دائم)",
+    j2_ben: "لابتوب، هاتف عمل، سكن للموظفين، ومواصلات",
+    j2_r1_t: "تخطيط وتصميم العمليات:",
+    j2_r1_d: "المساهمة الفعالة وتقديم الدعم الفني خلال مراحل التخطيط والتصميم الهندسي لمختلف طرق تحفيز الآبار.",
+    j2_r2_t: "التنفيذ الميداني:",
+    j2_r2_d: "قيادة والإشراف على وتنفيذ العمليات الميدانية لضمان إجراء جميع مراحل التحفيز بأمان وكفاءة وبما يتوافق مع المعايير الهندسية.",
+    j2_r3_t: "تقييم ما بعد العمل:",
+    j2_r3_d: "إجراء تحليلات وتقييمات شاملة لنتائج عمليات التحفيز لتحسين أداء وإنتاجية الآبار.",
+    j2_r4_t: "الخبرة الفنية في التحفيز:",
+    j2_r4_d: "امتلاك خبرة عميقة وسجل ميداني مثبت في التعامل مع مشاريع التحفيز المتنوعة، بما في ذلك: 1. التحكم في الرمال 2. التكسير الهيدروليكي التقليدي وغير التقليدي 3. معالجة وتنشيط الطبقات (التحميض) 4. إزالة الترسبات العضوية 5. عمليات التحكم في المياه وتطهير الآبار.",
+    j2_resign_val: "استقالة طوعية (لتقلد فرص تطوير مهني دولي خارج البلاد).",
+
+    j3_pos: "خبير / مستشار بيئي",
+    j3_loc: "إندونيسيا، سومطرة الجنوبية، مدينة باليمبانغ",
+    j3_period: "01/04/2010 – 28/02/2011 (دائم)",
+    j3_ben: "لابتوب، هاتف محمول، طابعة، إقامة، وبدلات سفر",
+    j3_r1_t: "الرقابة البيئية:",
+    j3_r1_d: "المسؤولية عن تقديم المشورة والتوجيه للشركات الشريكة - بما في ذلك قطاع النفط والغاز - للتحكم الفعال والسيطرة على الأثر البيئي للعمليات ورصده.",
+    j3_r2_t: "التوثيق والتنفيذ البيئي:",
+    j3_r2_d: "إدارة وتسهيل أطر وثائق البيئة القانونية الشاملة (تقييم الأثر البيئي خطط الإدارة والرصد البيئي).",
+    j3_r3_t: "الامتثال للأنظمة والقوانين:",
+    j3_r3_d: "ضمان توافق الأنشطة التشغيلية للعملاء بشكل صارم مع قوانين البيئة الإندونيسية للحد من المخاطر القانونية والبيئية.",
+    j3_resign_val: "الانتقال المهني إلى شركة شلومبرجير (SLB)."
+  }
+};
+
+function setLanguage(lang) {
+  // Update html attributes
+  document.documentElement.lang = lang;
+  document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+  // Update active state of buttons
+  const buttons = document.querySelectorAll('.lang-btn');
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.textContent.toLowerCase() === lang) {
+      btn.classList.add('active');
+    }
+  });
+
+  // Update translatable elements
+  const elements = document.querySelectorAll('[data-i18n]');
+  elements.forEach(elem => {
+    const key = elem.getAttribute('data-i18n');
+    if (translations[lang] && translations[lang][key]) {
+      elem.textContent = translations[lang][key];
+    }
+  });
+}
+</script>
+
+</body>
+</html>
